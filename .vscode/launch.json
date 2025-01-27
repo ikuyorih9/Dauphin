@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DauphinApplication<dauphin>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.dauphin.dauphin.DauphinApplication",
+            "projectName": "dauphin",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
