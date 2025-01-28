@@ -2,7 +2,7 @@
 
 ## 27/01/2025 - Básico da REST API e front-end
 
-### Backend no springboot
+### Back-end no springboot
 
 O projeto Dauphin no springboot se estabeleceu com a estrutura de arquivos abaixo.
 
@@ -30,7 +30,7 @@ Os diretórios separam os arquivos pela sua função:
 
 A aplicação é iniciada através do arquivo `DauphinApplication.java`.
 
-### Frontend da aplicação
+### Front-end da aplicação
 
 O front-end da aplicação é feito em HTML puro, apenas para representar uma interface que posteriormente será feita em AngularJS. Por enquanto, basta um front-end que possa fazer requisições GET e POST para o back-end.
 
