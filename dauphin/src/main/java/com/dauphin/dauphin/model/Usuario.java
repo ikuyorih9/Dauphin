@@ -1,5 +1,6 @@
 package com.dauphin.dauphin.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,8 +11,13 @@ public class Usuario{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String login;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
     private String senha;
+
     private String nome;
 
     public long getId() {
@@ -22,12 +28,12 @@ public class Usuario{
         this.id = id;
     }
     
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
     
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
     
     public String getSenha() {
