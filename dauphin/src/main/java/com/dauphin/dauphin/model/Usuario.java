@@ -18,7 +18,17 @@ public class Usuario{
     @Column(nullable = false)
     private String senha;
 
+    @Column(nullable =  false)
     private String nome;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = true)
+    private Integer idade;
+    
+    @Column(nullable = true)
+    private String sexo;
 
     public long getId() {
         return id;
@@ -50,6 +60,45 @@ public class Usuario{
     
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // Getter para idade
+    public Integer getIdade() {
+        return idade;
+    }
+
+    // Setter para idade
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
+    // Getter para sexo
+    public String getSexo() {
+        return sexo;
+    }
+
+    // Setter para sexo
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public void printUsuario(){
+        System.out.println("[USER] id: " + id);
+        System.out.println("[USER] usuario: " + username);
+        System.out.println("[USER] nome: " + nome);
+        System.out.println("[USER] email: " + email);
+        System.out.println("[USER] senha: " + senha);
+        System.out.println("[USER] idade: " + idade);
+        System.out.println("[USER] sexo: " + sexo);
+        
     }
     
 }
