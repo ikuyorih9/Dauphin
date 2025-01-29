@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS usuario;
+
+CREATE TABLE Usuario(
+    id SERIAL,
+    username VARCHAR(255) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    idade INTEGER,
+    sexo CHAR,
+    CONSTRAINT PK_USUARIO PRIMARY KEY (id),
+    CONSTRAINT SK_USERNAME UNIQUE(username),
+    CONSTRAINT TK_EMAIL UNIQUE(email),
+    CONSTRAINT CK_SEXO CHECK (sexo = 'M' OR sexo = 'F')
+);
