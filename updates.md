@@ -52,3 +52,60 @@ spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 ```
+
+## 29/01/2025 - Telas de login e cadastro
+
+### Login e cadastro no frontend
+
+Para comunicação com a base de dados, é preciso utilizar das requisições HTTP em conjunto com o backend. Dessa forma, foi feita duas telas: a `index.html` e `cadastro.html`, com seus respectivos scripts `.js`. 
+
+A primeira possui um formulário pedindo por nome de usuário e senha, que faz uma requisição POST no endpoint `/api/auth/login`; se a resposta do servidor for bem sucedida, então um alerta de "login bem sucedido" é lançado. A segunda também possui um formulário com outras informações, e faz uma requisição POST no endpoint `api/usuarios/cadastrar`; é esperado uma resposta em JSON de sucesso ou falha.
+
+### ErrorResponse e ApiResponse
+
+A resposta do backend para o frontend é traduzida de uma instância de uma das classes `ErrorResponse` e `ApiResponse`. Mas confesso que ambas deveriam ser somente uma única classe, pois ambas tem uma estrutura parecida:
+```
+public class ErroResponse {
+    private int status;
+    private String message;
+    private String timestamp;
+}
+
+public class ApiResponse<T> {
+    private HttpStatus status;
+    private String message;
+    private T data;
+}
+```
+
+### Login e cadastro no backend
+
+Com a requisição `@PostMapping("/login")` de login, é preciso criar um Data Transfer Object (DTO) *LoginRequest*, que representa uma entidade mínima para o usuário, com apenas username e senha. Primeiro, o *AuthController* procura por um usuário de mesmo nome na base de dados e se a senha do usuário do request é a mesma da base. Eventualmente, se o usuário existir, o login será bem sucedido.
+
+```
+Optional<Usuario> user = userRepository.findByUsername(loginRequest.getUsername());
+
+if (user.isPresent() && user.get().getSenha().equals(loginRequest.getSenha())){
+    return ResponseEntity.ok("Login bem-sucedido!");
+} 
+else {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos.");
+}
+```
+
+Para o cadastro a anotação `@PostMapping("/cadastrar")` indica a função `public ResponseEntity<ApiResponse<Usuario>> cadastrarUsuario(@RequestBody Usuario usuario)`, que chama a `usuarioService.cadastrarUsuario` do serviço. No serviço, há duas verificações: uma de nome de usuário existente e outra para o email.
+
+```
+Optional<Usuario> usuarioExistente = usuarioRepository.findByUsername(usuario.getUsername());
+if (usuarioExistente.isPresent()) {
+    throw new RuntimeException("O nome de usuário já está em uso.");
+}
+
+// Verifica se o email já está em uso
+Optional<Usuario> emailExistente = usuarioRepository.findByEmail(usuario.getEmail());
+if (emailExistente.isPresent()) {
+    throw new RuntimeException("O email já está em uso.");
+}
+```
+
+ O RuntimeException é capturado pela GlobalExceptionHandler, que é executada sempre que uma runtime exception ocorre. Mas eu sinceramente prefiro fazer o tratamento de erro localmente e devo corrigir isso.
