@@ -1,48 +1,88 @@
 package com.dauphin.dauphin.controller;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dauphin.dauphin.dto.ApiResponse;
-import com.dauphin.dauphin.dto.ErroResponse;
+import com.dauphin.dauphin.exception.ConflictException;
+import com.dauphin.dauphin.model.Grupo;
+import com.dauphin.dauphin.model.TemAmizade;
 import com.dauphin.dauphin.model.Usuario;
+import com.dauphin.dauphin.service.GrupoService;
+import com.dauphin.dauphin.service.TemAmizadeService;
 import com.dauphin.dauphin.service.UsuarioService;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.io.Serial;
+import java.net.http.HttpClient;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("api/usuario")
 public class UsuarioController {
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+    private final TemAmizadeService temAmizadeService;
+    private final GrupoService grupoService;
+
+    public UsuarioController(UsuarioService usuarioService, TemAmizadeService temAmizadeService, GrupoService grupoService){
+        this.usuarioService = usuarioService;
+        this.temAmizadeService = temAmizadeService;
+        this.grupoService = grupoService;
+    }
 
     @GetMapping
     public List <Usuario> listarTodos(){
-        return usuarioService.listarTodos();
+        return usuarioService.listar();
+    }
+    
+    @PostMapping("cadastrar")
+    public ResponseEntity cadastrarUsuario(@RequestBody Usuario usuario) {
+        System.out.println("[USUARIO]: "+usuario.toString());
+        usuarioService.cadastrar(usuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body("O usuário " + usuario.getUsername() + " foi cadastrado!");
     }
 
-    // Endpoint para adicionar um novo usuário (sem validações específicas)
-    @PostMapping("/adicionar")
-    public Usuario adicionarUsuario(@RequestBody Usuario usuario) {
-        return usuarioService.salvar(usuario);
+    @PostMapping("login")
+    public ResponseEntity loginUsuario(@RequestBody Usuario usuario) {
+        Usuario usuarioAutorizado = usuarioService.autenticar(usuario.getUsername(), usuario.getSenha());
+        if (usuarioAutorizado == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta!");
+        return ResponseEntity.ok("Login bem sucedido!");
     }
 
-    // Endpoint para cadastrar um novo usuário com validações
-    @PostMapping("/cadastrar")
-    public ResponseEntity<ApiResponse<Usuario>> cadastrarUsuario(@RequestBody Usuario usuario) {
-        Usuario usuarioCadastrado = usuarioService.cadastrarUsuario(usuario);
-        ApiResponse apiResponse = new ApiResponse<>(HttpStatus.OK, "Usuario cadastrado com sucesso!", usuarioCadastrado);
-        return ResponseEntity.ok(apiResponse);
+    @PostMapping("{myUsername}/amigos")
+    public ResponseEntity adicionarAmigo(@PathVariable String myUsername, @RequestBody Usuario friend){
+        Usuario usuario1 = usuarioService.busca(myUsername);
+        Usuario usuario2 = usuarioService.busca(friend.getUsername());
+        
+        if(temAmizadeService.possuemAmizade(usuario1, usuario2) == true)
+            throw new ConflictException("A amizade entre " + usuario1.getNome() + " e " + usuario2.getNome() + " já existe.");
+
+        TemAmizade novaAmizade = temAmizadeService.criar(usuario1, usuario2);
+
+        System.out.println("[NOVA AMIZADE] " + novaAmizade);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body("Amizade criada com sucesso!");
+        
+    }
+
+    @GetMapping("{username}/amigos")
+    public List listarAmigos(@PathVariable String username) {
+        return usuarioService.listarAmigos(username);
+    }
+    
+    @PostMapping("{username}/grupos/criados")
+    public ResponseEntity criarGrupo(@PathVariable String username, @RequestBody Grupo grupo) {
+        grupoService.criarGrupo(username, grupo);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Grupo criado com sucesso!");
     }
     
     
