@@ -1,5 +1,24 @@
 # Histórico de atualizações e registro de tecnologias
 
+## 📋 ToDo List
+### 🕗 Pendentes...
+
+*  #### 😫📢 Modificações importantes
+    - [ ] Adicionar a **META** como entidade genérica para as metas especializadas;
+        - [ ] Formular as **Metas** no diagrama relacional e na base de dados;
+    - [ ] Formular os exercícios catalogados;
+    - [ ] Melhorar a segurança da autenticação;
+    - [ ] Implementar um método para manter o usuário logado através de JWT.
+
+* #### 🥱🫸 Modificações secundárias
+
+    
+    - [ ] Mudar o endpoint de adicionar amigos para `api/usuarios/{username}/amigos/adicionar`;
+    - [ ] Verificar redundância nos *Exceptions* personalizados;
+
+### ✅ Concluídos!!!
+    Nada foi concluido...
+
 ## 27/01/2025 - Básico da REST API e front-end
 
 ### Back-end no springboot
@@ -109,3 +128,78 @@ if (emailExistente.isPresent()) {
 ```
 
  O RuntimeException é capturado pela GlobalExceptionHandler, que é executada sempre que uma runtime exception ocorre. Mas eu sinceramente prefiro fazer o tratamento de erro localmente e devo corrigir isso.
+
+## 12/02/2025 - Reformulação e início da base de dados
+
+Depois de todo o processo feito na última atualização, eu decidi refazer algumas coisas. Primeiro, eu apaguei todos os DTOs, os GlobalExceptionHandler e os Controllers, Services e Repositories. Mantive algumas coisas, mas quase tudo foi reescrito.
+
+### Tratamento de exceções
+
+Para cada requisição HTTP que falha, é preciso retornar o status do erro, como 409 para *conflict* ou 404 para *not found*. Para evitar *hardcode* sobre os status, de modo que o programador não tenha que definir o status pelo seu tipo, um bom uso de *Exceptions* é recomendado.
+
+Os exceptions personalizados ajudam a retornar os status específicos. Para que sua funcionalidade seja efetivada, é preciso configurar (novamente) o `GlobalExceptionHandler`, de modo que os exceptions sejam detectados automaticamente e não sejam de responsabilidade do programador. O `GlobalExceptionHandler` foi configurado como:
+
+```
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex);
+    .
+    .
+    .
+}
+
+```
+
+Os *Exceptions* tratados, personalizados ou não, são (até o momento):
+
+* ***DataIntegrityViolationException*** que ocorre quando a integridade da base de dados é violada na inserção, lançando o status `HttpStatus.BAD_REQUEST`;
+* ***UniqueKeyException*** que ocorre quando a chave primária é violada na inserção. Lança o status `HttpStatus.CONFLICT`.
+* ***UserNotFoundException*** que ocorre quando o usuário não é encontrado na base de dados. Lança o status `HttpStatus.NOT_FOUND`;
+* ***ConflictException*** ocorre num conflito genérico de dados. Também lança o status `HttpStatus.CONFLICT`;
+* ***RuntimeException*** ocorre em qualquer exception em tempo de execução. Lança `HttpStatus.BAD_REQUEST`.
+
+> 📝 **NOTA:** alguns dos *Exceptions* são repetidos e precisam ser reformulados.
+
+### Mudanças no diagrama ER e ínicio do diagrama relacional
+
+O diagrama ER, até então, continha funcionalidades básicas previstas na base dados, junto a informações de cada entidade. O diagrama ER não passou por uma reformulação, mas novas funcionalidades foram adicionadas:
+
+- ***Criar/Participar de grupos***: uma mudança de planos foi feita e agora as competições vão ser eventos maiores. As competições particulares previstas anteriormente agora serão metas de grupo. Uma correção foi feita em Competição, pois permita apenas participar e não criar, que foi adicionado por último.
+
+- ***Metas de grupo e metas pessoais***: as metas foram divididas em *Meta Conjunta* e *Meta Pessoal*. No diagrama ER, são duas entidades fracas diferentes sem nenhuma relação entre si, mas pretendo colocá-las como especialização de um tipo genérico *Meta*.
+
+- ***Adicionar amigos***: um autorelacionamento N-N foi criado para que seja possível adicionar amigos.
+
+> ⏰ **LEMBRAR**: preciso adicionar a **META** como entidade genérica para as metas especializadas.
+
+No diagrama relacional, apenas os entidades/relacionamentos **USUARIO**, **GRUPO**, **NIVEL** e **TEM_AMIZADE** foram implementados na base de dados. O único deles que foi completamente instanciado, até agora, é o Nivel, que possui as entradas:
+
+```
+INSERT INTO Nivel (classificacao, minimo_pontos, descricao) VALUES
+('Iniciante', 0, 'Nadador iniciante, aprendendo os fundamentos básicos da natação.'),
+('Intermediário', 500, 'Nadador com habilidades básicas, capaz de nadar diferentes estilos com técnica razoável.'),
+('Avançado', 1500, 'Nadador experiente, com boa resistência e técnica refinada.'),
+('Competitivo', 3000, 'Nadador treinado para competições, com alto desempenho e estratégia de prova.'),
+('Elite', 6000, 'Nadador de alto nível, com excelente condicionamento físico e técnica apurada.'),
+('Master', 10000, 'Nadador veterano com vasta experiência e participação em competições de alto nível.');
+```
+
+### Endpoints configurados
+
+Os endpoints configurados, sabendo das funcionalidades implementadas até agora, são:
+
+* `api/usuario/`: aplicando uma requisição GET é possível obter todos os usuários cadastrados;
+
+* `api/usuarios/cadastrar`: ao enviar um JSON do usuário, ele é salvo na base de dados;
+
+* `api/usuarios/login`: ao enviar um JSON do usuário, verifica-se se o usuário está cadastrado e se a senha corresponde;
+
+* `api/usuarios/{username}/amigos`: enviando uma requisição POST e um JSON de um usuário, é possível adicionar o amigo. Enviando uma requisição GET, é possível obter todos os amigos do usuário `username`;
+
+* `grupos/{username}/criados`: uma requisição POST e um JSON de Grupo, é possível criar um grupo. Uma requisição GET obtém todos os grupos criados por esse usuário;
+
+* `criados/{username}/{id}/apagar`: uma requisição POST, enviando o username e o id do grupo apaga o grupo, se ele existir.
+
+> ⏰ ***LEMBRAR***: o endpoint de adicionar amigos deve ser `api/usuarios/{username}/amigos/adicionar`.
+
