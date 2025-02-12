@@ -1,6 +1,7 @@
 package com.dauphin.dauphin.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,10 @@ public class TemAmizadeServiceImplementation implements TemAmizadeService{
         TemAmizade amizade = new TemAmizade(usuario1, usuario2, LocalDate.now());
         System.out.println("[CREATED] Nova amizade criada: " + amizade.getUsuario1().getUsername() + " e " + amizade.getUsuario2().getUsername() + " na data " + amizade.getDataInicio());
         return temAmizadeRepository.save(amizade);
+    }
+
+    @Override
+    public List listar(String username){
+        return temAmizadeRepository.buscarAmizades(username);
     }
 }

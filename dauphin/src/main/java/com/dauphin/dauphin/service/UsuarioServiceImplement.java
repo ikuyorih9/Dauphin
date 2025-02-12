@@ -20,17 +20,15 @@ import com.dauphin.dauphin.repository.UsuarioRepository;
 
 @Service
 public class UsuarioServiceImplement implements UsuarioService{
-    @Autowired
     UsuarioRepository usuarioRepository;
-
-    @Autowired
-    NivelRepository nivelRepository;
-
-    @Autowired
-    TemAmizadeRepository temAmizadeRepository;
-
-    @Autowired
+    TemAmizadeService temAmizadeService;
     NivelService nivelService;
+
+    public UsuarioServiceImplement(UsuarioRepository usuarioRepository, NivelService nivelService, TemAmizadeService temAmizadeService){
+        this.usuarioRepository = usuarioRepository;
+        this.nivelService = nivelService;
+        this.temAmizadeService = temAmizadeService;
+    }
 
     @Override
     public List listar(){
@@ -92,6 +90,6 @@ public class UsuarioServiceImplement implements UsuarioService{
 
     @Override
     public List listarAmigos(String username){
-        return temAmizadeRepository.buscarAmizades(busca(username).getUsername());
+        return temAmizadeService.listar(busca(username).getUsername());
     }
 }

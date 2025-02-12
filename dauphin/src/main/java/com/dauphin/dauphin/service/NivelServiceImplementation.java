@@ -8,8 +8,11 @@ import com.dauphin.dauphin.repository.NivelRepository;
 
 @Service
 public class NivelServiceImplementation implements NivelService{
-    @Autowired
     private NivelRepository nivelRepository;
+
+    public NivelServiceImplementation(NivelRepository nivelRepository){
+        this.nivelRepository = nivelRepository;
+    }
 
     @Override
     public Nivel determinaNivel(Integer pontuacao) {

@@ -29,12 +29,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UsuarioController {
     private final UsuarioService usuarioService;
     private final TemAmizadeService temAmizadeService;
-    private final GrupoService grupoService;
 
     public UsuarioController(UsuarioService usuarioService, TemAmizadeService temAmizadeService, GrupoService grupoService){
         this.usuarioService = usuarioService;
         this.temAmizadeService = temAmizadeService;
-        this.grupoService = grupoService;
     }
 
     @GetMapping
@@ -77,13 +75,5 @@ public class UsuarioController {
     public List listarAmigos(@PathVariable String username) {
         return usuarioService.listarAmigos(username);
     }
-    
-    @PostMapping("{username}/grupos/criados")
-    public ResponseEntity criarGrupo(@PathVariable String username, @RequestBody Grupo grupo) {
-        grupoService.criarGrupo(username, grupo);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Grupo criado com sucesso!");
-    }
-    
     
 }
