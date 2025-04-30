@@ -14,3 +14,10 @@ INSERT INTO Tem_Amizade(usuario1, usuario2, data_inicio) VALUES
 ('brunakitty', 'ikuyorih9', '2025-02-10');
 
 SELECT * FROM Usuario;
+
+INSERT INTO ROLE_GRUPO(nome, descricao, pode_convidar, pode_remover, pode_editar, pode_apagar) VALUES 
+('HOST', 'Criador do grupo, tem acesso total.', TRUE, TRUE, TRUE, TRUE),
+('ADMIN', 'Administrador do grupo, pode convidar e remover participantes.', TRUE, TRUE, FALSE, FALSE), 
+('MEMBER', 'Participante padrão, sem permissões administrativas.', FALSE, FALSE, FALSE, FALSE);
+
+SELECT * FROM ROLE_GRUPO;

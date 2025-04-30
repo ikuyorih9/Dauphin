@@ -9,4 +9,5 @@ public interface UsuarioService {
     public List<Usuario> lista();
     public Usuario cadastrar(UsuarioCadastroDTO dto);
     public Usuario buscar(String username);
+    public void deletar(String username);
 }

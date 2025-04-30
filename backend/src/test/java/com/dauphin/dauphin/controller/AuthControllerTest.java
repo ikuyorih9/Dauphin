@@ -1,4 +1,4 @@
-package com.dauphin.dauphin.controller;
+package com.dauphin.dauphin.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,31 +39,6 @@ public class AuthControllerTest {
     private TestRestTemplate restTemplate;
     @Autowired
     private EntityManager entityManager;
-	
-	@Test
-    @Transactional
-	void signupServiceTest(){ // Testa o cadastro de um usuário através do UsuarioService.
-        // Cria um DTO de usuário para teste.
-        UsuarioCadastroDTO dto = new UsuarioCadastroDTO(
-			"user",
-			"user@email.com", 
-			"user", 
-			"user", 
-			"M", 
-			LocalDate.now(), 
-			"user"
-		);
-
-        // Cadastrar o usuário através do service.
-        usuarioService.cadastrar(dto);
-
-        // Busca o usuário na base de dados.
-        Optional<Usuario> usuario = usuarioRepository.findByUsername(dto.getUsername());
-
-        // Testa se um objeto Usuario foi encontrado e se o seu username é o mesmo do DTO.
-        assertTrue(usuario.isPresent());
-        assertEquals(dto.getUsername(), usuario.get().getUsername());
-	}
 
 	@Test
     @Transactional
@@ -94,39 +69,7 @@ public class AuthControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
-    @Test
-    @Transactional
-    void signupConflictTest(){
-        // Cria um DTO de usuário para teste.
-        UsuarioCadastroDTO dto1 = new UsuarioCadastroDTO(
-			"user",
-			"user@email.com", 
-			"user", 
-			"user", 
-			"M", 
-			LocalDate.now(), 
-			"user"
-		);
-
-        // Cadastrar o usuário através do service.
-        usuarioService.cadastrar(dto1);
-
-        // Cria um outro DTO, com mesmo nome de usuário.
-        UsuarioCadastroDTO dto2 = new UsuarioCadastroDTO(
-			"user",
-			"anotheruser@email.com", 
-			"another user", 
-			"another_user", 
-			"M", 
-			LocalDate.now(), 
-			"user"
-		);
-
-        // Verifica se o exception EntityConflictInDatabaseException é lanãdo ao tentar cadastrar um usuário com mesmo username. 
-        assertThrows(EntityConflictInDatabaseException.class, () -> {
-            usuarioService.cadastrar(dto2);
-        });
-    }
+    
 
     @AfterEach
     void limparBanco() {

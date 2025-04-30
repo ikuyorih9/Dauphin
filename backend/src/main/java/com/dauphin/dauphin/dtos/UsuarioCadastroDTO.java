@@ -11,8 +11,7 @@ public class UsuarioCadastroDTO {
     LocalDate dataNascimento;
     String foto;
 
-    public UsuarioCadastroDTO(String username, String email, String nome, String senha, String sexo,
-            LocalDate dataNascimento, String foto) {
+    public UsuarioCadastroDTO(String username, String email, String nome, String senha, String sexo, LocalDate dataNascimento, String foto) {
         this.username = username;
         this.email = email;
         this.nome = nome;

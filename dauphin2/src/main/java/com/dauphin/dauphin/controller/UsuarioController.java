@@ -39,6 +39,11 @@ public class UsuarioController {
     public List <Usuario> listarTodos(){
         return usuarioService.listar();
     }
+
+    @GetMapping("{username}")
+    public Usuario encontrar(@PathVariable String username){
+        return usuarioService.busca(username);
+    }
     
     @PostMapping("cadastrar")
     public ResponseEntity cadastrarUsuario(@RequestBody Usuario usuario) {

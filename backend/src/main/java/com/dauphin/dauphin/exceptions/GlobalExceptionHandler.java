@@ -27,4 +27,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEntityNotFoundInDatabaseException(EntityNotFoundInDatabaseException e){
         return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler (TokenFailedException.class)
+    public ResponseEntity<String> handleTokenFailedException(TokenFailedException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler (PermissionDeniedException.class)
+    public ResponseEntity<String> handlePermissionDeniedException(PermissionDeniedException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
 }

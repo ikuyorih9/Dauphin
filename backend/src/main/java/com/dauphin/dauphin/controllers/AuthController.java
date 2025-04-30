@@ -26,5 +26,5 @@ public class AuthController {
         usuarioService.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("O usuário " + dto.getUsername() + " foi cadastrado!");
     }
-    
+
 }
