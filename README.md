@@ -11,10 +11,19 @@ O diagrama entidade-relacionamento apresentado na Figura 1 apresenta a formaçã
 ![database](images/Dauphin.jpg)
 ###### *<center>Figura 1: diagrama ER da base de dados.</center>* 
 
+# 📑 Os ROLES da aplicação
+
+## 🔐 Roles Globais da Aplicação
+
+| **Role Global** | **Permissões** |
+|-----------------|----------------|
+| `ADMIN`         | Acesso ao painel de administração, moderação de conteúdo, gerenciamento global de usuários, acesso a métricas da aplicação, entre outros. |
+| `USER`          | Usuário comum da aplicação, pode participar de grupos, montar treinos, etc. Não pode acessar recursos administrativos. |
+
+
 # 🌐 Endpoints da API
 
 ## 🔗 De autenticação `auth/`
-
 
 🔴 `auth/signup`: 
 

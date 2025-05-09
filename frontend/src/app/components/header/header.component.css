@@ -1,0 +1,27 @@
+.left-div, .title-div, .buttons-div{
+    display: flex;
+    height:100%;
+    flex-direction: row;
+    align-items: center;
+    flex:1;
+}
+
+.left-div{
+    justify-content: flex-start;
+}
+
+.title-div{
+    justify-content: center;
+}
+
+.buttons-div{
+    justify-content: flex-end;
+}
+
+.icon-title{
+    width:32px;
+}
+
+.header-buttons{
+    width:48px;
+}

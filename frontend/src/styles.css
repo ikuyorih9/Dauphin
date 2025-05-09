@@ -1,1 +1,69 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Sen&display=swap');
+
+* {
+    font-family: 'Sen', sans-serif;
+    color:#041C33;
+}
+
+.title{
+    font-size: 40px;
+    margin: 0px 10px 0px 10px;
+}
+
+.bg-light{
+    background-color: #F5FAFD;
+    color: #041C33;
+}
+
+.icon-light{
+    color: #041C33;
+    border-radius: 10px;
+}
+
+.icon-button{
+    width:48px;
+    aspect-ratio: 1;
+    border: none;
+    padding: 0px;
+    background: none;
+    color: #041C33;
+    border-radius: 10px;
+    margin: 0px 10px 0px 5px;
+}
+
+header{
+    width: 100%;
+    height: 8vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* para ficar acima de outros elementos */
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-light{
+    background-color: #9DD2F3;
+}
+
+button{
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.2);
+}
+
+body {
+    margin-top: 8vh;
+    width: auto;
+    height: auto;
+}
+
+.banner-body{
+    background-color: #9DD2F34D;
+}

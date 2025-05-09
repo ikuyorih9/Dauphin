@@ -1,0 +1,13 @@
+
+.banner-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.rightBanner{
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 colunas iguais */
+    grid-template-rows: auto auto; /* 2 linhas automáticas */
+    gap: 10px; /* espaçamento entre os itens (opcional) */
+}

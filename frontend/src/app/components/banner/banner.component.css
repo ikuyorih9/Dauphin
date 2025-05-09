@@ -1,0 +1,19 @@
+.banner{
+    padding: 0px;
+    margin:0px;
+    overflow: hidden;
+}
+
+.header-light{
+    height:3vh;
+    padding: 0px 10px 0px 10px;
+    margin:0px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.banner-body{
+    padding:10px 10px 10px 10px;
+    margin:0px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}

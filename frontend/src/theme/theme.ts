@@ -1,0 +1,6 @@
+export const COLORS = {
+    PRIMARY: '041C33',
+    SECONDARY: '9DD2F3',
+    ON_ACTION: '0B5F87',
+    BACKGROUND: 'F5FAFD'
+};
